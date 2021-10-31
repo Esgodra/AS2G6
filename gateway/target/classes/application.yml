@@ -1,0 +1,149 @@
+server:
+  port: 8887
+
+hystrix.command.fallbackcmd.execution.isolation.thread.timeoutInMilliseconds: 2000
+hystrix.command.default.execution.isolation.strategy: THREAD
+
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+
+        - id: servicio-producto
+          uri: lb://servicio-producto
+          #uri: http://localhost:9001/
+          predicates:
+            - Path=/api/producto/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@userKeyResolver}'
+                redis-rate-limiter.replenishRate: 2
+                redis-rate-limiter.burstCapacity: 2
+            - RewritePath=/api/producto(?<service>.*), $\{service}
+            - TokenRelay=
+#            - name: Hystrix
+#              args:
+#                name: booksFallbackCommand
+#                fallbackUri: forward:/fallback/books
+
+
+        - id: servicio-item
+          uri: lb://servicio-item
+          predicates:
+            - Path=/api/item/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                key-resolver: '#{@userKeyResolver}'
+                redis-rate-limiter.replenishRate: 2
+                redis-rate-limiter.burstCapacity: 2
+            - RewritePath=/api/(?<movies>.*), /$\{movies}
+            - AddResponseHeader=X-Some-Header, aboullaite.me
+
+
+#        - id: car-inventory
+#          #uri: lb://car-inventory
+#          uri: http://localhost:8010/
+#          predicates:
+#            - Path=/api/cars/**
+#          filters:
+#            - name: RequestRateLimiter
+#              args:
+#                key-resolver: '#{@userKeyResolver}'
+#                redis-rate-limiter.replenishRate: 2
+#                redis-rate-limiter.burstCapacity: 2
+#            # - TokenRelay=
+#            # - RewritePath=/api/(?<cars>.*), /viewCars
+#            - RewritePath=/api/cars(?<service>.*), /$\{service}
+#            - TokenRelay=
+
+
+#        - id: web-app
+#          uri: http://localhost:3000/
+#          predicates:
+#            - Path=/nodejs/**
+#          filters:
+#            - name: RequestRateLimiter
+#              args:
+#                key-resolver: '#{@userKeyResolver}'
+#                redis-rate-limiter.replenishRate: 2
+#                redis-rate-limiter.burstCapacity: 2
+#            - RewritePath=/nodejs(?<service>.*), /$\{service}
+#            - TokenRelay=
+
+
+  #        - id: persona-react
+  #            #uri: lb://car-inventory
+  #            uri: http://localhost:8585/
+  #            predicates:
+  #              - Path=/api/person/**
+  #            filters:
+  #              - name: RequestRateLimiter
+  #                args:
+  #                  key-resolver: '#{@userKeyResolver}'
+  #                  redis-rate-limiter.replenishRate: 2
+  #                  redis-rate-limiter.burstCapacity: 2
+  #              - TokenRelay=
+  #              # - RewritePath=/api/(?<cars>.*), /viewCars
+  #              - RewritePath=/api/person(?<service>.*), /persona/$\{service}
+
+  redis:
+    host: 172.17.0.2
+    port: 6379
+    jedis:
+      pool:
+        max-active: 100
+        max-idle: 100
+
+  autoconfigure:
+    # TODO: remove when fixed https://github.com/spring-projects/spring-security/issues/6314
+    exclude: org.springframework.boot.actuate.autoconfigure.security.reactive.ReactiveManagementWebSecurityAutoConfiguration
+
+  security:
+    oauth2:
+      client:
+        registration:
+          login-client:
+            provider: uaa
+            client-id: login_app
+            client-secret: 5f0b5df8-f797-4a96-b7a1-0a80f251f09f
+            authorization-grant-type: authorization_code
+            redirect-uri-template: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: read,write
+        provider:
+          uaa:
+            authorization-uri: http://localhost:8080/auth/realms/produccion/protocol/openid-connect/auth
+            token-uri: http://localhost:8080/auth/realms/produccion/protocol/openid-connect/token
+            user-info-uri: http://localhost:8080/auth/realms/produccion/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username
+            jwk-set-uri: http://localhost:9050/auth/token_keys
+
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        #include: hystrix.stream
+
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.cloud.gateway: DEBUG
