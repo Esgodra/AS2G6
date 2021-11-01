@@ -1,0 +1,177 @@
+{
+	"info": {
+		"_postman_id": "554aea96-adc0-45fa-ba00-fb55d4cf3bd2",
+		"name": "Analisis de Sistemas II | Proyect",
+		"description": "Todo nuestro proyecto aqui\nGracias ingeniera <2+1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8081/lista",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": {
+						"clientSecret": "5f0b5df8-f797-4a96-b7a1-0a80f251f09f",
+						"grant_type": "password_credentials",
+						"useBrowser": false,
+						"password": "gluna",
+						"username": "gluna",
+						"headerPrefix": "Bearer",
+						"clientId": "login_app",
+						"accessTokenUrl": "http://localhost:8080/auth/realms/produccion/protocol/openid-connect/token",
+						"addTokenTo": "queryParams",
+						"scope": "openid",
+						"client_authentication": "body"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "user1",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "http://1270.0.1:8050/service",
+				"description": "Obtiene todos los datos de ahi. "
+			},
+			"response": []
+		},
+		{
+			"name": "http://192.168.0.11:8050/service",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": {
+						"clientSecret": "5f0b5df8-f797-4a96-b7a1-0a80f251f09f",
+						"grant_type": "password_credentials",
+						"useBrowser": false,
+						"password": "gluna",
+						"username": "gluna",
+						"headerPrefix": "Bearer",
+						"clientId": "login_app",
+						"accessTokenUrl": "http://localhost:8080/auth/realms/produccion/protocol/openid-connect/token",
+						"addTokenTo": "queryParams",
+						"scope": "openid",
+						"client_authentication": "body"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "username",
+						"value": "user1",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": "http://1270.0.1:8050/service",
+				"description": "La data viene de el microservicio escrito en Phyton."
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/add",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": {
+						"clientSecret": "5f0b5df8-f797-4a96-b7a1-0a80f251f09f",
+						"grant_type": "password_credentials",
+						"useBrowser": false,
+						"password": "gluna",
+						"username": "gluna",
+						"headerPrefix": "Bearer",
+						"clientId": "login_app",
+						"accessTokenUrl": "http://localhost:8080/auth/realms/produccion/protocol/openid-connect/token",
+						"addTokenTo": "queryParams",
+						"scope": "openid",
+						"client_authentication": "body"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "username",
+						"value": "user1",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n    \"_id\": 123333,\n    \"name\": \"Jesus\",\n    \"edad\": \"2021\",\n    \"ciudad\": \"Jerusalen\"\n    }, \n    {\n    \"_id\": 12321,\n    \"name\": \"Henry\",\n    \"edad\": \"15+15\",\n    \"ciudad\": \"San Lucas\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:8081/add",
+				"description": "Añadir datos al base de datos jeje"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8081/update/:id",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": {
+						"clientSecret": "5f0b5df8-f797-4a96-b7a1-0a80f251f09f",
+						"grant_type": "password_credentials",
+						"useBrowser": false,
+						"password": "gluna",
+						"username": "gluna",
+						"headerPrefix": "Bearer",
+						"clientId": "login_app",
+						"accessTokenUrl": "http://localhost:8080/auth/realms/produccion/protocol/openid-connect/token",
+						"addTokenTo": "queryParams",
+						"scope": "openid",
+						"client_authentication": "body"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "username",
+						"value": "user1",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n    \"_id\": 123333,\n    \"name\": \"Jesus\",\n    \"edad\": \"2021\",\n    \"ciudad\": \"Jerusalen\"\n    }, \n    {\n    \"_id\": 12321,\n    \"name\": \"Henry\",\n    \"edad\": \"15+15\",\n    \"ciudad\": \"San Lucas\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/update/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"update",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				},
+				"description": "Actualiza la data de un id determinad."
+			},
+			"response": []
+		}
+	]
+}
